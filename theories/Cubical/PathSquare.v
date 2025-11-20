@@ -539,6 +539,53 @@ Section Kan.
 
 End Kan.
 
+(** To prove stronger uniqueness results and related induction principles, we need to start a new section so we can generalize over all of the points. *)
+
+Section KanUnique.
+
+  Context {A : Type} {a00 a10 a01 a11 : A}.
+
+  Definition sq_fill_l_uniq'
+             {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+    : Contr {px0 : a00 = a10 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_l px1 p0x p1x)).
+    intros [px0' s'].
+    by destruct s'.
+  Defined.
+
+  (* TODO: add the other three.  Should we remove the earlier uniqueness results which are weaker? *)
+
+  (** Induction principles that only require one edge to be free. *)
+
+  Definition pathsquare_ind_l
+                      {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px0 : a00 = a10) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_l px1 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px0 sq, P px0 sq.
+  Proof.
+    intros px0 sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_t
+    {px0 : a00 = a10} {px1 : a01 = a11}
+                      {p1x : a10 = a11}
+    (P : forall (p0x : a00 = a01) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_t px0 px1 p1x))
+    (p : P fill.1 fill.2)
+    : forall p0x sq, P p0x sq.
+  Proof.
+    intros p0x sq.
+    by destruct sq.
+  Defined.
+
+  (** TODO: add the two others. *)
+
+End KanUnique.
+
 (* Apply a function to the sides of square *)
 Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -> B)
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
@@ -643,8 +690,6 @@ Proof.
   apply fxgxid.
 Defined.
 
-
-
 Definition interchange {A}
 {a00 a10 a20 a01 a11 a21 a02 a12 a22 :A} (** 9 points in big square of 2x2 squares *)
 (** sq00, top left, 4 paths *)
@@ -675,19 +720,7 @@ sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
 Proof.
   destruct sq00, sq11.
   destruct vi2, h2i.
-  simpl.
-  rewrite (sq_concat_h_1s (p0y:=1) (p1y:=1) sq01).
-  simpl.
-  rewrite (sq_concat_v_1s (p0y:=1) (p1y:=1) sq10).
-  simpl.
-  (* We're missing the analogous [sq_concat_v_1s]. Done, a .._s1, vr *)
-  (* remember ((equiv_sq_path^-1 sq01) @ (@concat_p1 A a20 a20 h0j)) as h0j1 eqn: H0j1. *)
-  destruct ((equiv_sq_path^-1 sq01) @ (@concat_p1 A a20 a20 h0j)). simpl.
-  destruct ((@concat_p1 A a20 a20 vj0)^ @ (equiv_sq_path^-1 sq10))^. simpl.
-  simpl in sq10, sq01.
-  (* This is Eckman-Hilton, but if we remember that h0j, vj0 are 1 
-     by reflexivity, and hence  sq01, sq10 are 1-squares, we are done *)
-Admitted.
-
-
-
+  revert vj0 sq10; rapply pathsquare_ind_l; simpl.
+  revert h0j sq01; rapply pathsquare_ind_t; simpl.
+  reflexivity.
+Defined.
