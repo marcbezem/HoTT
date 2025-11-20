@@ -438,7 +438,7 @@ Section GroupoidLawsH.
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
-    by destruct s.
+    by destruct px1.
   Defined.
 
   Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
@@ -448,7 +448,7 @@ Section GroupoidLawsH.
 
   Definition sq_concat_v_s1 : sq_concat_v s vr = sq_GGcc (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
-    by destruct s.
+    by destruct p1x.
   Defined.
 
   Definition sq_concat_v_1s : sq_concat_v vr s = sq_GGcc (concat_1p _)^ (concat_1p _)^ s.
@@ -509,19 +509,10 @@ Section Kan.
     exact (s' @ concat_1p _).
   Defined.
 
+  (* TODO: Maybe this should just be removed, since it has a simple proof that avoids squares? It's not used anywhere. *)
   Definition equiv_sq_fill_lr (p0x : a00 = a01) (p1x : a10 = a11)
-    : (a00 = a10) <~> (a01 = a11).
-  Proof.
-    srapply equiv_adjointify.
-    - intros px0; exact (sq_fill_r px0 p0x p1x).1.
-    - intros px1; exact (sq_fill_l px1 p0x p1x).1.
-    - intros px1.
-      exact (sq_fill_r_uniq (sq_fill_r _ p0x p1x).2
-                            (sq_fill_l px1 p0x p1x).2).
-    - intros px0.
-      exact (sq_fill_l_uniq (sq_fill_l _ p0x p1x).2
-                            (sq_fill_r px0 p0x p1x).2).
-  Defined.
+    : (a00 = a10) <~> (a01 = a11)
+    := equiv_concat_r p1x _ oE equiv_concat_l p0x^ a10.
 
   Definition sq_fill_t (px0 : a00 = a10) (px1 : a01 = a11) (p1x : a10 = a11)
     : {p0x : a00 = a01 & PathSquare px0 px1 p0x p1x}.
