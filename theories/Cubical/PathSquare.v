@@ -433,6 +433,8 @@ Section GroupoidLawsH.
 
   Local Open Scope square_scope.
   Notation hr := (sq_refl_h _).
+  Notation vr := (sq_refl_v _).
+
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
@@ -440,6 +442,16 @@ Section GroupoidLawsH.
   Defined.
 
   Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
+  Proof.
+    by destruct s.
+  Defined.
+
+  Definition sq_concat_v_s1 : sq_concat_v s vr = sq_GGcc (concat_p1 _)^ (concat_p1 _)^ s.
+  Proof.
+    by destruct s.
+  Defined.
+
+  Definition sq_concat_v_1s : sq_concat_v vr s = sq_GGcc (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
@@ -666,9 +678,15 @@ Proof.
   simpl.
   rewrite (sq_concat_h_1s (p0y:=1) (p1y:=1) sq01).
   simpl.
-  (* We're missing the analogous [sq_concat_v_1s]. *)
-  remember ((equiv_sq_path^-1 sq01) @ (@concat_p1 A a20 a20 h0j)) as h0j1 eqn: H0j1.
+  rewrite (sq_concat_v_1s (p0y:=1) (p1y:=1) sq10).
+  simpl.
+  (* We're missing the analogous [sq_concat_v_1s]. Done, a .._s1, vr *)
+  (* remember ((equiv_sq_path^-1 sq01) @ (@concat_p1 A a20 a20 h0j)) as h0j1 eqn: H0j1. *)
   destruct ((equiv_sq_path^-1 sq01) @ (@concat_p1 A a20 a20 h0j)). simpl.
+  destruct ((@concat_p1 A a20 a20 vj0)^ @ (equiv_sq_path^-1 sq10))^. simpl.
+  simpl in sq10, sq01.
+  (* This is Eckman-Hilton, but if we remember that h0j, vj0 are 1 
+     by reflexivity, and hence  sq01, sq10 are 1-squares, we are done *)
 Admitted.
 
 
