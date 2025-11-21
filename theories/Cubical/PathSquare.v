@@ -544,7 +544,34 @@ Section KanUnique.
     by destruct s'.
   Defined.
 
-  (* TODO: add the other three.  Should we remove the earlier uniqueness results which are weaker? *)
+  Definition sq_fill_r_uniq'
+             {px0 : a00 = a10} {p0x : a00 = a01} {p1x : a10 = a11}
+    : Contr {px1 : a01 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_r px0 p0x p1x)).
+    intros [px1' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_t_uniq'
+             {px0 : a00 = a10} {px1 : a01 = a11} {p1x : a10 = a11}
+    : Contr {p0x : a00 = a01 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_t px0 px1 p1x)).
+    intros [p0x' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_b_uniq'
+             {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01}
+    : Contr {p1x : a10 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_b px0 px1 p0x)).
+    intros [p1x' s'].
+    by destruct s'.
+  Defined.
+
+  (* TODO: Should we remove the earlier uniqueness results which are weaker? *)
 
   (** Induction principles that only require one edge to be free. *)
 
@@ -560,6 +587,18 @@ Section KanUnique.
     by destruct sq.
   Defined.
 
+ Definition pathsquare_ind_r
+    {px0 : a00 = a10}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px1 : a01 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_r px0 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px1 sq, P px1 sq.
+  Proof.
+    intros px1 sq.
+    by destruct sq.
+  Defined.
+
   Definition pathsquare_ind_t
     {px0 : a00 = a10} {px1 : a01 = a11}
                       {p1x : a10 = a11}
@@ -572,7 +611,19 @@ Section KanUnique.
     by destruct sq.
   Defined.
 
-  (** TODO: add the two others. *)
+  Definition pathsquare_ind_b
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01}
+    (P : forall (p1x : a10 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_b px0 px1 p0x))
+    (p : P fill.1 fill.2)
+    : forall p1x sq, P p1x sq.
+  Proof.
+    intros p1x sq.
+    by destruct sq.
+  Defined.
+
+
 
 End KanUnique.
 
