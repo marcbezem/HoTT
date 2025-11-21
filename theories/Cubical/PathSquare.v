@@ -753,12 +753,16 @@ Definition interchange {A}
   (sq10 : PathSquare vj0 vj1 h1i h2i)
   (sq01 : PathSquare vi1 vi2 h0j h1j)
   (sq11 : PathSquare vj1 vj2 h1j h2j)
-  : sq_concat_h (sq_concat_v sq00 sq10) (sq_concat_v sq01 sq11)
-    = sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
+  : 
+  sq_concat_h (sq_concat_v sq00 sq10) (sq_concat_v sq01 sq11)
+  = 
+  sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
 Proof.
   destruct sq00, sq11.
-  destruct vi2, h2i.
-  revert vj0 sq10; rapply pathsquare_ind_l; simpl.
-  revert h0j sq01; rapply pathsquare_ind_t; simpl.
+  destruct vi2, h2i. revert vj0 sq10. 
+  rapply pathsquare_ind_l. 
   reflexivity.
+(*  revert vj0 sq10; rapply pathsquare_ind_l; simpl.
+  revert h0j sq01; rapply pathsquare_ind_t; simpl.
+  reflexivity. *)
 Defined.
